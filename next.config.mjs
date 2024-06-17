@@ -10,6 +10,10 @@ const nextConfig = {
         protocol: "https",
         hostname: "careful-poodle-40.convex.cloud",
       },
+      {
+        protocol: "https",
+        hostname: "img.clerk.com",
+      },
     ],
   },
 };
