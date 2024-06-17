@@ -8,17 +8,22 @@ import PodcastDetailPlayer from "@/components/PodcastDetailPlayer";
 import LoaderSpinner from "@/components/LoaderSpinner";
 import PodcastCard from "@/components/PodcastCard";
 import EmptyState from "@/components/EmptyState";
+import { useUser } from "@clerk/nextjs";
 
 const PodcastDetails = ({
   params: { podcastId },
 }: {
   params: { podcastId: Id<"podcasts"> };
 }) => {
+  const { user } = useUser();
+
   const podcast = useQuery(api.podcasts.getPodcastById, { podcastId });
 
   const similarPodcasts = useQuery(api.podcasts.getPodcastByVoiceType, {
     podcastId,
   });
+
+  const isOwner = user?.id === podcast?.authorId;
 
   if (!similarPodcasts || !podcast) return <LoaderSpinner />;
 
@@ -37,7 +42,11 @@ const PodcastDetails = ({
         </figure>
       </header>
 
-      <PodcastDetailPlayer />
+      <PodcastDetailPlayer
+        isOwner={isOwner}
+        podcastId={podcast._id}
+        {...podcast}
+      />
 
       <p className="text-white-2 text-16 pb-8 pt-[45px] font-medium max-md:text-center">
         {podcast?.podcastDescription}
